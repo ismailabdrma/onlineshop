@@ -1,0 +1,10 @@
+{% extends 'store/main.html' %}
+
+{% block content %}
+<div class="product-detail">
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 10%; height: auto;" />
+    <h4>{{ product.name }}</h4>
+    <h5>Dh{{ product.price|floatformat:2 }}</h5>
+    <p>{% lorem 2 p random %}</p>
+</div>
+{% endblock %}
