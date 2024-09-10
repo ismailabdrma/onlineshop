@@ -4,7 +4,7 @@ from django.db import transaction
 import json
 import datetime
 from .models import Product, Order, OrderItem, ShippingAddress
-from .utils import cartData, guestOrder
+from .utils import cartData, guestOrder, cookieCart
 from .cart import Cart
 
 # Helper function to avoid repetition
@@ -26,26 +26,25 @@ def store(request):
     return render(request, 'store/store.html', context)
 
 def cart_view(request):
-    context = get_cart_context(request)
+    print("Cart View is called")  # This should appear in the console when the cart page is loaded
+    context = cookieCart(request)
     return render(request, 'store/cart.html', context)
 
 def update_cart(request):
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body)  # Expect JSON body
-            product_id = data['productId']
-            action = data['action']
-            product = get_object_or_404(Product, id=product_id)
-            cart = Cart(request)
+        data = json.loads(request.body)
+        product_id = data['productId']
+        action = data['action']
 
-            if action == 'add':
-                cart.add(product)
-            elif action == 'remove':
-                cart.remove(product)
+        product = Product.objects.get(id=product_id)
+        cart = Cart(request)
 
-            return JsonResponse({'status': 'success'})
-        except Exception as e:
-            return JsonResponse({'status': 'fail', 'message': str(e)}, status=400)
+        if action == 'add':
+            cart.add(product)
+        elif action == 'remove':
+            cart.remove(product)
+
+        return JsonResponse('Item was added', safe=False)
     else:
         return JsonResponse({'status': 'fail', 'message': 'Invalid request method'}, status=400)
 

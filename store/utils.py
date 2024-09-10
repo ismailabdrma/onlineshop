@@ -1,15 +1,22 @@
 import json
 from .models import *
 from .models import Order, OrderItem
+import json
+from .models import Product
+
 def cookieCart(request):
     try:
         cart = json.loads(request.COOKIES['cart'])
     except:
         cart = {}
-    print(cart)
+
+    # Print the cart data for debugging
+    print("Cart from Cookies:", cart)  # This will output the cart content to the Django console
+
     items = []
     order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
     cartItems = order['get_cart_items']
+
     for i in cart:
         try:
             cartItems += cart[i]['quantity']
@@ -31,8 +38,7 @@ def cookieCart(request):
         except:
             pass
 
-    return {'cartItems':cartItems,'order':order,'items':items}
-
+    return {'cartItems': cartItems, 'order': order, 'items': items}
 
 
 def cartData(request):
