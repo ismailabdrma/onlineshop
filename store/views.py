@@ -76,6 +76,7 @@ def updateItem(request):
 
 def checkout(request):
     context = get_cart_context(request)
+    print("Cart data in checkout:", context)  
     return render(request, 'store/checkout.html', context)
 
 @transaction.atomic

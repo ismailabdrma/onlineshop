@@ -57,7 +57,11 @@ def cartData(request):
             order = {'get_cart_total': 0, 'get_cart_items': 0}
             cartItems = order['get_cart_items']
     else:
-        customer, order, cartItems, items = guestOrder(request)
+        # For guest users, use the cookieCart function to get the cart data from cookies
+        data = cookieCart(request)  # Call the cookieCart function for guest users
+        cartItems = data['cartItems']
+        order = data['order']
+        items = data['items']
 
     return {'cartItems': cartItems, 'order': order, 'items': items}
 
